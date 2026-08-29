@@ -100,6 +100,11 @@ Future improvements may include:
 - Additional testing
 - Improved mobile responsiveness
 
+## Facilitator Resources
+
+For challenge solutions, facilitation notes, and troubleshooting guidance, see the [Facilitator Guide](FACILITATOR_GUIDE.md).
+
+
 ## Disclaimer
 
 R.B.'s Bat Lab is an independently developed educational project and is not an official Austin Community College website or authentication system.
