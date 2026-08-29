@@ -22,12 +22,6 @@ The experience includes activities related to:
 - File organization
 - Password security
 
-## Live Challenge
-
-The participant-facing version of the project is available online through Google Sites.
-
-[Launch R.B.'s Bat Lab](https://sites.google.com/view/csitchallenge/home)
-
 ## The Challenge in Action
 
 The project was used as an interactive participant experience where users worked through the different activities and challenges.
