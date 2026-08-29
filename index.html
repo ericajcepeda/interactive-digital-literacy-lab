@@ -1,0 +1,2051 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>R.B.'s Bat Lab</title>
+<style>
+:root{
+--acc-purple:#4F2683;
+--acc-purple-dark:#3a1c63;
+--acc-blue:#2f6fda;
+--acc-green:#1fbf60;
+--bg:#f5f4fb;
+--card:#ffffff;
+--soft:#efe9fb;
+--border:#e6e0f3;
+--text:#222;
+--muted:#666;
+--danger:#b00020;
+--success:#146c2e;
+}
+body{
+font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+background:var(--bg);
+margin:0;
+padding:16px;
+color:var(--text);
+}
+.wrapper{ max-width:1020px; margin:0 auto; }
+.card{
+background:var(--card);
+border-radius:18px;
+padding:22px;
+margin-bottom:18px;
+border:2px solid var(--acc-purple);
+box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+h1,h2,h3{ color:var(--acc-purple); margin:0 0 10px; }
+h1{ font-size:1.6rem; }
+h2{ font-size:1.25rem; }
+h3{ font-size:1.05rem; margin-top:16px; }
+p{ line-height:1.5; margin:8px 0; }
+ul{ margin:8px 0 8px 20px; }
+ol{ margin:8px 0 8px 22px; }
+.muted{ color:var(--muted); font-size:.92rem; }
+.locked{ display:none; }
+img{
+width:100%;
+border-radius:14px;
+margin:14px 0;
+}
+.logo{
+max-width:420px;
+width:100%;
+display:block;
+margin:10px auto 18px;
+border-radius:0;
+}
+input, select{
+padding:10px 12px;
+border-radius:12px;
+border:1px solid #ccc;
+font-size:1rem;
+width:100%;
+box-sizing:border-box;
+margin-top:6px;
+}
+label{
+font-weight:900;
+color:var(--acc-purple);
+display:block;
+margin-top:10px;
+}
+button, a.btnlink{
+display:inline-block;
+background:var(--acc-purple);
+color:white;
+border:none;
+border-radius:999px;
+padding:10px 16px;
+font-weight:950;
+cursor:pointer;
+margin-top:12px;
+text-decoration:none;
+}
+button:hover, a.btnlink:hover{ background:var(--acc-purple-dark); }
+.btn2{ background:var(--acc-blue); }
+.btn2:hover{ background:#255ab0; }
+.msg{ margin-top:10px; font-weight:950; }
+.success{ color:var(--success); }
+.error{ color:var(--danger); }
+iframe{
+width:100%;
+border:2px solid var(--border);
+border-radius:14px;
+min-height:560px;
+}
+.divider{
+height:1px; background:var(--border); margin:14px 0;
+}
+.two-col{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+}
+@media (max-width:720px){
+.two-col{ grid-template-columns:1fr; }
+}
+code{
+background:var(--soft);
+padding:2px 6px;
+border-radius:8px;
+font-weight:800;
+}
+.progress-bar{
+height:12px; background:#e9e3f6; border-radius:999px; overflow:hidden;
+margin-top:10px;
+}
+.progress-fill{
+height:100%; width:0%; background:var(--acc-purple); transition:width .25s ease;
+}
+.steps{
+display:flex; flex-wrap:wrap; gap:10px;
+list-style:none; padding:0; margin:12px 0 0;
+}
+.step{
+padding:6px 12px; border-radius:999px; border:1px solid #ddd;
+font-weight:950; font-size:.92rem;
+background:#fff;
+color:#6b5a8e;
+}
+.active{ background:var(--soft); border-color:var(--acc-purple); color:var(--acc-purple); }
+.done{ background:#eaf6ee; border-color:var(--success); color:var(--success); }
+.mfaBox{
+border:1px solid var(--border);
+border-radius:14px;
+padding:14px;
+background:#fbfaff;
+}
+.radioRow{
+display:flex;
+align-items:center;
+gap:12px;
+padding:12px 12px;
+border:1px solid #ddd;
+border-radius:12px;
+background:#fff;
+margin-top:10px;
+cursor:pointer;
+font-weight:900;
+}
+.radioRow:hover{
+border-color:var(--acc-purple);
+background:var(--soft);
+}
+.radioRow input{
+width:auto;
+margin:0;
+transform:scale(1.15);
+accent-color: var(--acc-purple);
+}
+.radioLabel{
+display:flex;
+flex-direction:column;
+gap:3px;
+}
+.radioLabel small{
+color:var(--muted);
+font-weight:750;
+}
+.notifWrap{
+position:relative;
+margin-top:14px;
+}
+.notif{
+border:1px solid #d9c9f3;
+background:var(--soft);
+border-radius:14px;
+padding:12px 14px;
+font-weight:900;
+color:#2b2150;
+overflow:hidden;
+}
+.notifHeader{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+margin-bottom:8px;
+}
+.notifHeader .from{
+font-weight:1000;
+color:var(--acc-purple);
+}
+.notifHeader .tag{
+font-size:.82rem;
+font-weight:950;
+padding:3px 8px;
+border-radius:999px;
+background:#fff;
+border:1px solid #d9c9f3;
+color:#2b2150;
+}
+.slideIn{
+animation: slideDown .55s ease both;
+}
+@keyframes slideDown{
+from{ opacity:0; transform: translateY(-18px); }
+to { opacity:1; transform: translateY(0); }
+}
+.sending{
+display:inline-block;
+margin-top:10px;
+padding:8px 12px;
+border-radius:12px;
+border:1px solid #d9c9f3;
+background:#fff;
+font-weight:950;
+color:#2b2150;
+}
+.dingText{
+font-weight:1000;
+color:#2b2150;
+margin-bottom:6px;
+}
+
+/* === GITHUB STYLES FOR PART 1 === */
+.github-container {
+background: #f6f8fa;
+border-radius: 18px;
+padding: 0;
+margin-bottom: 18px;
+border: 2px solid #d0d7de;
+box-shadow: 0 8px 20px rgba(0,0,0,.08);
+overflow: hidden;
+}
+
+.github-header {
+background: #ffffff;
+border-bottom: 1px solid #d0d7de;
+padding: 16px 24px;
+display: flex;
+align-items: center;
+gap: 12px;
+}
+
+.github-profile-small {
+width: 40px;
+height: 40px;
+border-radius: 50%;
+background: linear-gradient(135deg, #4F2683 0%, #2f6fda 100%);
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 20px;
+font-weight: bold;
+color: white;
+}
+
+.github-title {
+flex: 1;
+}
+
+.github-title h2 {
+margin: 0;
+font-size: 14px;
+color: #57606a;
+font-weight: 400;
+}
+
+.github-title h2 a {
+color: #0969da;
+text-decoration: none;
+font-weight: 600;
+}
+
+.github-body {
+padding: 24px;
+background: #ffffff;
+}
+
+.file-browser {
+background: #f6f8fa;
+border: 1px solid #d0d7de;
+border-radius: 8px;
+overflow: hidden;
+margin-bottom: 16px;
+}
+
+.file-item {
+display: flex;
+align-items: center;
+gap: 12px;
+padding: 10px 16px;
+border-bottom: 1px solid #d0d7de;
+cursor: pointer;
+transition: background 0.1s;
+font-family: ui-monospace, monospace;
+font-size: 14px;
+}
+
+.file-item:last-child {
+border-bottom: none;
+}
+
+.file-item:hover {
+background: #ffffff;
+}
+
+.file-item.locked {
+opacity: 0.5;
+cursor: not-allowed;
+}
+
+.file-item.locked:hover {
+background: transparent;
+}
+
+.file-icon {
+font-size: 16px;
+}
+
+.file-name {
+flex: 1;
+color: #0969da;
+}
+
+.file-item.locked .file-name {
+color: #57606a;
+}
+
+.lock-icon {
+color: #57606a;
+}
+
+.readme-view {
+background: #ffffff;
+border: 1px solid #d0d7de;
+border-radius: 8px;
+padding: 24px;
+}
+
+.readme-view h3 {
+font-size: 24px;
+color: #24292f;
+border-bottom: 1px solid #d0d7de;
+padding-bottom: 8px;
+margin-top: 0;
+}
+
+.readme-view h4 {
+font-size: 18px;
+color: #24292f;
+margin-top: 24px;
+}
+
+.readme-view code {
+background: #f6f8fa;
+border: 1px solid #d0d7de;
+padding: 2px 6px;
+border-radius: 3px;
+font-family: ui-monospace, monospace;
+font-size: 85%;
+}
+
+.code-viewer {
+display: none;
+background: #ffffff;
+border: 1px solid #d0d7de;
+border-radius: 8px;
+padding: 16px;
+margin-top: 16px;
+}
+
+.code-viewer.active {
+display: block;
+}
+
+.code-header {
+display: flex;
+align-items: center;
+gap: 8px;
+padding-bottom: 12px;
+border-bottom: 1px solid #d0d7de;
+margin-bottom: 16px;
+}
+
+.code-content {
+font-family: ui-monospace, “SF Mono”, Consolas, monospace;
+font-size: 12px;
+line-height: 1.6;
+background: #f6f8fa;
+padding: 16px;
+border-radius: 6px;
+overflow-x: auto;
+}
+
+.code-line {
+display: grid;
+grid-template-columns: 40px 1fr;
+gap: 16px;
+}
+
+.line-num {
+color: #57606a;
+text-align: right;
+user-select: none;
+}
+
+.line-text {
+color: #24292f;
+}
+
+.py-keyword { color: #cf222e; font-weight: 600; }
+.py-string { color: #0a3069; }
+.py-comment { color: #57606a; font-style: italic; }
+.py-function { color: #8250df; }
+.py-number { color: #0550ae; }
+
+/* Rest of original styles continue… */
+.inboxShell{
+border:2px solid var(–border);
+border-radius:16px;
+overflow:hidden;
+background:#fff;
+}
+.inboxTop{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:10px;
+padding:12px 14px;
+background:#fbfaff;
+border-bottom:2px solid var(–border);
+}
+.inboxTop strong{
+color:var(–acc-purple);
+font-weight:1000;
+}
+.inboxTop .meta{
+color:var(–muted);
+font-weight:850;
+font-size:.92rem;
+}
+.inboxBody{
+display:grid;
+grid-template-columns: 340px 1fr;
+min-height:420px;
+}
+@media (max-width:860px){
+.inboxBody{ grid-template-columns:1fr; }
+}
+.mailList{
+border-right:2px solid var(–border);
+background:#fff;
+}
+.mailItem{
+display:flex;
+gap:12px;
+align-items:flex-start;
+padding:14px 14px;
+border-bottom:1px solid #f0edf7;
+cursor:pointer;
+transition: background .15s ease, box-shadow .15s ease;
+}
+.mailItem:hover{
+background:var(–soft);
+}
+.mailItem.selected{
+background:var(–soft);
+box-shadow: inset 0 0 0 2px rgba(79,38,131,.35);
+}
+.mailItem .dot{
+width:10px; height:10px;
+border-radius:50%;
+margin-top:6px;
+background:var(–acc-blue);
+}
+.mailItem.read .dot{
+background:transparent;
+}
+.mailItem .subject{
+font-weight:1000;
+color:#2b2150;
+line-height:1.25;
+}
+.mailItem .preview{
+color:var(–muted);
+font-weight:800;
+font-size:.9rem;
+margin-top:2px;
+}
+.badge{
+margin-left:auto;
+font-size:.8rem;
+font-weight:1000;
+padding:3px 8px;
+border-radius:999px;
+border:1px solid #d9c9f3;
+background:#fff;
+color:#2b2150;
+}
+.mailItem.read .badge{
+display:none;
+}
+.mailPane{
+padding:18px 20px;
+background:#fff;
+}
+.mailEmpty{
+border:1px dashed #d9c9f3;
+border-radius:14px;
+padding:20px;
+background:#fbfaff;
+color:#2b2150;
+font-weight:900;
+text-align:center;
+}
+.mailHeader{
+display:flex;
+flex-wrap:wrap;
+gap:10px 16px;
+align-items:center;
+justify-content:space-between;
+padding-bottom:12px;
+border-bottom:2px solid var(–border);
+}
+.mailHeader .title{
+font-weight:1000;
+color:var(–acc-purple);
+font-size:1.05rem;
+}
+.mailMeta{
+margin-top:12px;
+font-weight:850;
+color:#2b2150;
+line-height:1.6;
+}
+.mailBodyText{
+margin-top:14px;
+padding:16px 16px;
+border-radius:14px;
+border:1px solid #eee;
+background:#fafafa;
+font-weight:800;
+line-height:1.6;
+}
+.closeRow{
+margin-top:14px;
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
+.chatNotif{
+position:fixed;
+right:16px;
+bottom:16px;
+width:min(360px, calc(100vw - 32px));
+border-radius:16px;
+border:1px solid #d9c9f3;
+background:#ffffff;
+box-shadow:0 16px 40px rgba(0,0,0,.18);
+overflow:hidden;
+z-index:9999;
+transform: translateY(18px);
+opacity:0;
+pointer-events:none;
+}
+.chatNotif.show{
+animation: notifUp .45s ease both;
+pointer-events:auto;
+}
+@keyframes notifUp{
+from{ transform: translateY(18px); opacity:0; }
+to{ transform: translateY(0); opacity:1; }
+}
+.chatNotifTop{
+display:flex;
+align-items:center;
+gap:10px;
+padding:10px 12px;
+background:var(–soft);
+border-bottom:1px solid #d9c9f3;
+}
+.chatNotifTop img{
+width:34px; height:34px;
+border-radius:50%;
+margin:0;
+object-fit:cover;
+border:2px solid #fff;
+}
+.chatNotifTop .name{
+font-weight:1000;
+color:var(–acc-purple);
+line-height:1.1;
+}
+.chatNotifTop .role{
+font-size:.82rem;
+font-weight:850;
+color:var(–muted);
+}
+.chatNotifBody{
+padding:12px;
+font-weight:900;
+color:#2b2150;
+line-height:1.35;
+}
+.chatNotifActions{
+padding:10px 12px 12px;
+display:flex;
+justify-content:flex-end;
+gap:10px;
+}
+.chatNotifActions button{
+margin-top:0;
+padding:8px 12px;
+font-weight:1000;
+}
+.chatShell{
+max-width:760px;
+margin:10px auto 0;
+border:2px solid var(–border);
+background:#fbfaff;
+border-radius:18px;
+overflow:hidden;
+}
+.chatHeader{
+background:#2E1A47;
+color:#fff;
+padding:12px 14px;
+font-weight:1000;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:10px;
+}
+.chatHeaderLeft{
+display:flex;
+flex-direction:column;
+gap:2px;
+color:#fff;
+}
+.onlineWrap{
+display:flex;
+align-items:center;
+gap:8px;
+font-weight:950;
+font-size:.92rem;
+color:#fff;
+}
+.onlineDot{
+width:10px; height:10px; border-radius:50%;
+background:var(–acc-green);
+box-shadow:0 0 0 3px rgba(31,191,96,.22);
+}
+.onlineText{ color:#a0f5c3; font-weight:950; }
+.chatBody{
+padding:14px;
+height:380px;
+overflow:auto;
+background:#f5f5f5;
+}
+.bubble{
+max-width:82%;
+padding:10px 12px;
+border-radius:16px;
+margin:8px 0;
+line-height:1.35;
+font-weight:800;
+font-size:.98rem;
+}
+.bot{
+background:#e8e0f7;
+border:2px solid #8b5cf6;
+color:#000;
+border-top-left-radius:6px;
+}
+.user{
+background:#b3f0ed;
+color:#000;
+margin-left:auto;
+border-top-right-radius:6px;
+border:3px solid #00B2A9;
+}
+.typing{
+display:inline-block;
+padding:10px 12px;
+border-radius:16px;
+background:#e8e0f7;
+border:2px solid #8b5cf6;
+color:#000;
+font-weight:1000;
+}
+.chatControls{
+padding:12px 14px;
+background:#fff;
+border-top:2px solid var(–border);
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+}
+.choiceBtn{
+background:#b3f0ed;
+color:#000;
+border:3px solid #00B2A9;
+border-radius:999px;
+padding:10px 14px;
+font-weight:1000;
+cursor:pointer;
+}
+.choiceBtn:hover{ background:#8ee8e3; }
+.imgInChat{
+width:100%;
+border-radius:14px;
+margin:10px 0 0;
+border:1px solid #d9c9f3;
+}
+.driveHeader{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:10px;
+padding:12px 14px;
+border:2px solid var(–border);
+border-radius:14px;
+background:#fbfaff;
+}
+.driveHeader strong{ color:var(–acc-purple); font-weight:1000; }
+.driveHeader .hint{ color:var(–muted); font-weight:800; font-size:.92rem; }
+.driveGrid{
+display:grid;
+grid-template-columns: 1.1fr .9fr;
+gap:14px;
+margin-top:12px;
+}
+@media (max-width:920px){
+.driveGrid{ grid-template-columns:1fr; }
+}
+.fileList, .folderCol{
+border:2px solid var(–border);
+border-radius:14px;
+background:#fff;
+padding:14px;
+}
+.fileList h3, .folderCol h3{ margin-top:0; }
+.fileItem{
+display:flex;
+align-items:center;
+gap:10px;
+padding:12px 10px;
+border:1px solid #ddd;
+border-radius:12px;
+margin-top:10px;
+background:#fff;
+cursor:grab;
+user-select:none;
+}
+.fileItem:active{ cursor:grabbing; }
+.fileIcon{
+width:26px; height:26px; border-radius:6px; margin:0;
+object-fit:contain;
+}
+.fileMeta{
+display:flex; flex-direction:column; gap:2px;
+}
+.fileMeta small{ color:var(–muted); font-weight:750; }
+.folder{
+border:2px dashed #d9c9f3;
+border-radius:14px;
+padding:14px;
+margin-top:10px;
+background:#fbfaff;
+min-height:100px;
+}
+.folderTop{
+display:flex;
+align-items:center;
+gap:10px;
+font-weight:1000;
+color:var(–acc-purple);
+margin-bottom:6px;
+}
+.folderTop img{
+width:22px; height:22px; margin:0; border-radius:0;
+}
+.folderHint{
+color:var(–muted);
+font-weight:800;
+font-size:.9rem;
+margin:0 0 6px;
+}
+.dropzoneActive{
+background:var(–soft);
+border-color: var(–acc-purple);
+}
+.folderFiles{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+}
+.pillFile{
+background:#fff;
+border:1px solid #d9c9f3;
+border-radius:999px;
+padding:6px 10px;
+font-weight:950;
+font-size:.9rem;
+color:#2b2150;
+}
+.pwWrap{
+border:2px solid var(–border);
+border-radius:14px;
+padding:14px;
+background:#fbfaff;
+}
+.pwRow{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+margin-top:10px;
+}
+.chip{
+border:1px solid #d9c9f3;
+background:#fff;
+color:#2b2150;
+border-radius:999px;
+padding:8px 12px;
+font-weight:1000;
+cursor:pointer;
+}
+.chip:hover{ background:var(–soft); border-color:var(–acc-purple); }
+.pwPreview{
+border:2px solid #d9c9f3;
+background:#fff;
+border-radius:14px;
+padding:12px 14px;
+font-weight:1000;
+word-break:break-word;
+margin-top:10px;
+}
+.pwActions{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+margin-top:10px;
+}
+.btnDanger{
+background:#8b1c2d;
+}
+.btnDanger:hover{ background:#6f1624; }
+#confettiCanvas{
+position:fixed;
+inset:0;
+width:100vw;
+height:100vh;
+pointer-events:none;
+z-index:99999;
+display:none;
+}
+.successBanner{
+font-size:1.9rem;
+font-weight:1100;
+color:var(–acc-purple);
+display:inline-block;
+margin-bottom:10px;
+transform-origin:center;
+}
+.bounceIn{
+animation: bounceIn .9s cubic-bezier(.2,.9,.2,1.15) both;
+}
+@keyframes bounceIn{
+0% { transform: scale(.75); opacity:0; }
+45% { transform: scale(1.15); opacity:1; }
+70% { transform: scale(.96); }
+100% { transform: scale(1); }
+}
+</style>
+
+</head>
+<body>
+<div class="wrapper">
+
+<!-- LOGIN -->
+
+<div class="card" id="loginCard">
+<img class="logo" src="https://austinyc.org/wp-content/uploads/2023/03/Austin-Community-College-logo.png" alt="Austin Community College logo">
+<h1>🦇💜 R.B.'s Bat Lab Login</h1>
+<p>
+R.B. left his credentials on a sticky note at his desk. Use what you found there to access the Bat Lab and begin the challenge.
+</p>
+<div class="two-col">
+<div>
+<label for="loginUser">Username</label>
+<input id="loginUser" type="text" placeholder="Enter username from sticky note" autocomplete="off">
+</div>
+<div>
+<label for="loginPass">Password</label>
+<input id="loginPass" type="password" placeholder="Enter password from sticky note" autocomplete="off">
+</div>
+</div>
+<button onclick="doLogin()">Access Bat Lab 💜</button>
+<div id="loginMsg" class="msg"></div>
+<p class="muted" style="margin-top:12px;">
+This is a game-only login screen. Do not enter your real ACC username or password.
+</p>
+</div>
+
+<!-- MFA -->
+
+<div class="card locked" id="mfaCard">
+<h1>🔐 Verify It's You</h1>
+<p>Unusual activity has been detected. Please complete multi-factor authentication to continue.</p>
+<div class="mfaBox" id="mfaSelect">
+<p style="margin-top:0;"><strong>Select a verification method:</strong></p>
+<div class="radioRow" onclick="pickRadio('mfaGoogle')">
+<input type="radio" name="mfaMethod" id="mfaGoogle" value="Google Authenticator">
+<div class="radioLabel">
+Google Authenticator
+<small>Enter a one-time code from your authenticator app</small>
+</div>
+</div>
+<div class="radioRow" onclick="pickRadio('mfaOkta')">
+<input type="radio" name="mfaMethod" id="mfaOkta" value="Okta Verify">
+<div class="radioLabel">
+Okta Verify
+<small>Use an Okta verification code</small>
+</div>
+</div>
+<div class="radioRow" onclick="pickRadio('mfaPhone')">
+<input type="radio" name="mfaMethod" id="mfaPhone" value="Phone">
+<div class="radioLabel">
+Phone
+<small>Receive a code by phone verification</small>
+</div>
+</div>
+<button class="btn2" onclick="sendMfa()">Send Verification Code</button>
+<div id="mfaMsg" class="msg"></div>
+<div id="mfaSending" class="sending locked">Sending code…</div>
+</div>
+<div class="mfaBox locked" id="mfaCode">
+<div class="notifWrap">
+<div class="notif" id="notifBox">
+<div class="notifHeader">
+<div class="from" id="mfaFrom">Security Notification</div>
+<div class="tag">MFA</div>
+</div>
+<div id="mfaText">
+<div class="dingText">🔔 New authentication notification</div>
+The authentication code for the Bat Lab is: <strong>1973</strong>
+</div>
+</div>
+</div>
+<label for="mfaInput">Enter the 4-digit authentication code</label>
+<input id="mfaInput" type="text" inputmode="numeric" maxlength="4" placeholder="____" autocomplete="off">
+<button onclick="verifyMfa()">Verify Identity 🔐</button>
+<div id="mfaCodeMsg" class="msg"></div>
+</div>
+</div>
+
+<!-- CHALLENGE -->
+
+<div id="challenge" class="locked">
+<div class="card">
+<h1>🦇💜 R.B.'s Bat Lab Challenge</h1>
+<p><strong>Start Here. Get There.</strong></p>
+<div class="progress-bar">
+<div class="progress-fill" id="progressFill"></div>
+</div>
+<ul class="steps">
+<li class="step active" id="s1">🦇 Part 1</li>
+<li class="step" id="s2">💜 Part 2</li>
+<li class="step" id="s3">🦇 Part 3</li>
+<li class="step" id="s4">💜 Part 4</li>
+<li class="step" id="s5">🗂️ Files</li>
+<li class="step" id="s6">🦇 Final Lock</li>
+<li class="step" id="s7">🔐 Password</li>
+</ul>
+</div>
+
+<!-- PART 1: FAKE GITHUB -->
+
+<div class="github-container" id="part1">
+<div class="github-header">
+<div class="github-profile-small">RB</div>
+<div class="github-title">
+<h2><a href="#">Bbhoggawact</a> / <a href="#"><strong>acc-cipher-decoder</strong></a></h2>
+</div>
+<div style="font-size: 12px; color: #57606a; padding: 4px 10px; border: 1px solid #d0d7de; border-radius: 999px; background: #f6f8fa;">Public</div>
+</div>
+
+```
+<div class="github-body">
+<h3 style="color: #24292f; margin-bottom: 16px;">🦇💜 R.B.'s ACC Cipher Decoder</h3>
+
+<p style="margin-bottom: 16px;"><strong>Welcome to my Caesar cipher decoder repository!</strong></p>
+
+<p style="margin-bottom: 16px;">Work through these three Python files in order to decode my secret ACC messages:</p>
+
+<!-- File 01: ACC Campus -->
+<div class="code-viewer" style="display: block; margin-bottom: 24px;">
+<div class="code-header">
+<span class="file-icon">🐍</span>
+<span style="font-weight: 600;">01_ACC_Campus.py</span>
+</div>
+<div class="code-content">
+<div class="code-line"><div class="line-num">1</div><div class="line-text"><span class="py-comment"># 01_ACC_Campus.py - Solve to unlock File 02</span></div></div>
+<div class="code-line"><div class="line-num">2</div><div class="line-text"></div></div>
+<div class="code-line"><div class="line-num">3</div><div class="line-text"><span class="py-comment">"""</span></div></div>
+<div class="code-line"><div class="line-num">4</div><div class="line-text"><span class="py-comment">RIDDLE: At Austin Community College...</span></div></div>
+<div class="code-line"><div class="line-num">5</div><div class="line-text"><span class="py-comment">- We have 11 campuses across the ACC District</span></div></div>
+<div class="code-line"><div class="line-num">6</div><div class="line-text"><span class="py-comment">- We offer 10 areas of study</span></div></div>
+<div class="code-line"><div class="line-num">7</div><div class="line-text"><span class="py-comment"></span></div></div>
+<div class="code-line"><div class="line-num">8</div><div class="line-text"><span class="py-comment">Add these two numbers together!</span></div></div>
+<div class="code-line"><div class="line-num">9</div><div class="line-text"><span class="py-comment">"""</span></div></div>
+<div class="code-line"><div class="line-num">10</div><div class="line-text"></div></div>
+<div class="code-line"><div class="line-num">11</div><div class="line-text">campuses = <span class="py-number">11</span></div></div>
+<div class="code-line"><div class="line-num">12</div><div class="line-text">areas = <span class="py-number">10</span></div></div>
+<div class="code-line"><div class="line-num">13</div><div class="line-text"></div></div>
+<div class="code-line"><div class="line-num">14</div><div class="line-text">answer = <span class="py-number">?</span> <span class="py-comment"># What is 11 + 10?</span></div></div>
+<div class="code-line"><div class="line-num">15</div><div class="line-text"></div></div>
+<div class="code-line"><div class="line-num">16</div><div class="line-text"><span class="py-keyword">if</span> answer == (campuses + areas):</div></div>
+<div class="code-line"><div class="line-num">17</div><div class="line-text"> print(<span class="py-string">"✅ Correct! Unlocking File 02..."</span>)</div></div>
+</div>
+<div style="margin-top: 12px; padding: 12px; background: #f6f8fa; border: 1px solid #d0d7de; border-radius: 6px;">
+<label style="display: block; margin-bottom: 8px; font-weight: 600; color: #24292f;">Enter your answer:</label>
+<input type="number" id="github-input-01" placeholder="?" style="width: 100px; padding: 8px; border: 1px solid #d0d7de; border-radius: 6px; margin-right: 8px;">
+<button onclick="runFile01()" style="background: #2da44e; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">▶️ Run Code</button>
+<div id="github-output-01" style="margin-top: 8px; font-weight: 600;"></div>
+</div>
+</div>
+
+<!-- File 02: CS Shortcut (LOCKED) -->
+<div class="code-viewer locked" id="github-file-02" style="display: none; margin-bottom: 24px;">
+<div class="code-header">
+<span class="file-icon">🐍</span>
+<span style="font-weight: 600;">02_CS_Shortcut.py</span>
+</div>
+<div class="code-content">
+<div class="code-line"><div class="line-num">1</div><div class="line-text"><span class="py-comment"># 02_CS_Shortcut.py - Solve to unlock File 03</span></div></div>
+<div class="code-line"><div class="line-num">2</div><div class="line-text"></div></div>
+<div class="code-line"><div class="line-num">3</div><div class="line-text"><span class="py-comment">"""</span></div></div>
+<div class="code-line"><div class="line-num">4</div><div class="line-text"><span class="py-comment">RIDDLE: Fill in the blank...</span></div></div>
+<div class="code-line"><div class="line-num">5</div><div class="line-text"><span class="py-comment">"On the keyboard, the ____ key is part of many shortcuts."</span></div></div>
+<div class="code-line"><div class="line-num">6</div><div class="line-text"><span class="py-comment"></span></div></div>
+<div class="code-line"><div class="line-num">7</div><div class="line-text"><span class="py-comment"> On the keyboard, the _____ key has _ letters</span></div></div>
+<div class="code-line"><div class="line-num">8</div><div class="line-text"><span class="py-comment">ACC removes barriers, so SUBTRACT 1.</span></div></div>
+<div class="code-line"><div class="line-num">9</div><div class="line-text"><span class="py-comment">"""</span></div></div>
+<div class="code-line"><div class="line-num">10</div><div class="line-text"></div></div>
+<div class="code-line"><div class="line-num">11</div><div class="line-text">letters = <span class="py-number">?</span></div></div>
+<div class="code-line"><div class="line-num">12</div><div class="line-text"></div></div>
+<div class="code-line"><div class="line-num">13</div><div class="line-text">shift = <span class="py-number">?</span></div></div>
+<div class="code-line"><div class="line-num">14</div><div class="line-text"></div></div>
+<div class="code-line"><div class="line-num">15</div><div class="line-text"><span class="py-keyword">if</span> shift == (letters - <span class="py-number">1</span>):</div></div>
+<div class="code-line"><div class="line-num">16</div><div class="line-text"> print(<span class="py-string">"✅ Correct! This is the cipher shift!"</span>)</div></div>
+<div class="code-line"><div class="line-num">17</div><div class="line-text"> print(<span class="py-string">"🦇 Unlocking File 03..."</span>)</div></div>
+</div>
+<div style="margin-top: 12px; padding: 12px; background: #f6f8fa; border: 1px solid #d0d7de; border-radius: 6px;">
+<label style="display: block; margin-bottom: 8px; font-weight: 600; color: #24292f;">Enter your answer:</label>
+<input type="number" id="github-input-02" placeholder="?" style="width: 100px; padding: 8px; border: 1px solid #d0d7de; border-radius: 6px; margin-right: 8px;">
+<button onclick="runFile02()" style="background: #2da44e; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">▶️ Run Code</button>
+<div id="github-output-02" style="margin-top: 8px; font-weight: 600;"></div>
+</div>
+</div>
+
+<!-- File 03: Decode (LOCKED) -->
+<div class="code-viewer locked" id="github-file-03" style="display: none; margin-bottom: 24px;">
+<div class="code-header">
+<span class="file-icon">🐍</span>
+<span style="font-weight: 600;">03_Decode.py</span>
+</div>
+<div class="code-content">
+<div class="code-line"><div class="line-num">1</div><div class="line-text"><span class="py-comment"># 03_Decode.py - R.B.'s ACC Values Decoder</span></div></div>
+<div class="code-line"><div class="line-num">2</div><div class="line-text"></div></div>
+<div class="code-line"><div class="line-num">3</div><div class="line-text">messages = [</div></div>
+<div class="code-line"><div class="line-num">4</div><div class="line-text"> <span class="py-string">"Dw#Dxvwlq#Frppxqlw|#Froohjh/#zh#ydoxh"</span>,</div></div>
+<div class="code-line"><div class="line-num">5</div><div class="line-text"> <span class="py-string">"Frxudjh1#Frpsdvvlrq1#Mr|1#dqg#\\hv1"</span>,</div></div>
+<div class="code-line"><div class="line-num">6</div><div class="line-text"> <span class="py-string">"Zh#eholhyh#hyhu|#Ulyhuedw#fdq#ulvh1"</span>,</div></div>
+<div class="code-line"><div class="line-num">7</div><div class="line-text"> <span class="py-string">"Vwduw#Khuh1#Jhw#Wkhuh1"</span>,</div></div>
+<div class="code-line"><div class="line-num">8</div><div class="line-text"> <span class="py-string">"\\rx#duh#sduw#ri#vrphwklqj#eljjhu1"</span>,</div></div>
+<div class="code-line"><div class="line-num">9</div><div class="line-text"> <span class="py-string">"L#oryh#wkh#DFF#Vdq#Jdeulho#Fdpsxv1"</span></div></div>
+<div class="code-line"><div class="line-num">10</div><div class="line-text">]</div></div>
+<div class="code-line"><div class="line-num">11</div><div class="line-text"></div></div>
+<div class="code-line"><div class="line-num">12</div><div class="line-text">shift = <span class="py-number">?</span> <span class="py-comment"># Use smaller shift from 01 or 02</span></div></div>
+<div class="code-line"><div class="line-num">13</div><div class="line-text"></div></div>
+<div class="code-line"><div class="line-num">14</div><div class="line-text"><span class="py-keyword">for</span> encoded <span class="py-keyword">in</span> messages:</div></div>
+<div class="code-line"><div class="line-num">15</div><div class="line-text"> decoded = <span class="py-string">""</span></div></div>
+<div class="code-line"><div class="line-num">16</div><div class="line-text"> <span class="py-keyword">for</span> char <span class="py-keyword">in</span> encoded:</div></div>
+<div class="code-line"><div class="line-num">17</div><div class="line-text"> decoded += chr(ord(char) - shift)</div></div>
+<div class="code-line"><div class="line-num">18</div><div class="line-text"> print(decoded)</div></div>
+</div>
+<div style="margin-top: 12px; padding: 12px; background: #f6f8fa; border: 1px solid #d0d7de; border-radius: 6px;">
+<label style="display: block; margin-bottom: 8px; font-weight: 600; color: #24292f;">Enter your answer:</label>
+<input type="number" id="github-input-03" placeholder="?" style="width: 100px; padding: 8px; border: 1px solid #d0d7de; border-radius: 6px; margin-right: 8px;">
+<button onclick="runFile03()" style="background: #2da44e; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">▶️ Run Code</button>
+<div id="github-output-03" style="margin-top: 12px; padding: 12px; background: #0d1117; color: #3fb950; border-radius: 6px; font-family: monospace; font-size: 13px; white-space: pre-wrap; display: none;"></div>
+</div>
+</div>
+
+<div class="divider"></div>
+<p><strong>Verification 💜:</strong> Enter your cipher shift number:</p>
+<input type="number" id="p1" inputmode="numeric" placeholder="Enter the smaller number">
+<button onclick="check1()">Confirm & Proceed to Part 2 🦇</button>
+<div id="m1" class="msg"></div>
+</div>
+```
+
+</div>
+
+<!-- PART 2 (Inbox) -->
+
+<div class="card locked" id="part2">
+<h2>💜🦇 Part 2 — Cyber Lab: Spot the Fake ACC Email</h2>
+<img src="https://eu-images.contentstack.com/v3/assets/blt69509c9116440be8/blt8ffb90a2f64bacfa/6776f4544b281ca5e2bc465a/cybersecurity_NicoElNino-AlamyStockPhoto.jpg?disable=upscale&width=1200&height=630&fit=crop" alt="Cybersecurity image">
+<p><strong>Inbox Simulation:</strong> You have two unread emails. One is a phishing attempt.</p>
+<p>Click each email to open it. Watch for red flags: spelling errors, suspicious links, sender information, urgency/threats, requests for personal data, and unexpected attachments.</p>
+<p>Write down the number of red flags you found in the phishing email — you'll use it later.</p>
+<div class="inboxShell" aria-label="Inbox Simulation">
+<div class="inboxTop">
+<strong>ACC Gmail — Inbox</strong>
+<span class="meta">2 unread • Today</span>
+</div>
+<div class="inboxBody">
+<div class="mailList">
+<div class="mailItem" id="mailItem1" onclick="openEmail(1)">
+<span class="dot" aria-hidden="true"></span>
+<div>
+<div class="subject">Student Life 🎉 Highland End-of-Semester Bash</div>
+<div class="preview">From: sl@austincc.edu • Free food, music, games…</div>
+</div>
+<span class="badge">Unread</span>
+</div>
+<div class="mailItem" id="mailItem2" onclick="openEmail(2)">
+<span class="dot" aria-hidden="true"></span>
+<div>
+<div class="subject">URGENT: Your ACC Gmail Password Will Expire Today</div>
+<div class="preview">From: acc-helpdesk@acc-securityverify.info • Verify in 10 min…</div>
+</div>
+<span class="badge">Unread</span>
+</div>
+</div>
+<div class="mailPane" id="mailPane">
+<div class="mailEmpty">
+📬 Click an email on the left to read it.
+</div>
+</div>
+</div>
+</div>
+<div class="divider"></div>
+<p><strong>Verification 💜:</strong> Enter the number of phishing red flags you found:</p>
+<input type="number" id="p2" inputmode="numeric" placeholder="Enter number of red flags">
+<button onclick="check2()">Verify Phishing Analysis 💜</button>
+<div id="m2" class="msg"></div>
+</div>
+
+<!-- PART 3 -->
+
+<div class="card locked" id="part3">
+<h2>🦇💜 Part 3 — R.B.'s Data Lab</h2>
+<img src="https://cdn.thenewstack.io/media/2023/01/285d68dd-charts-1024x581.jpg" alt="Data charts">
+<p>Open the dataset in Excel, scan the numbers, and answer the questions below. Then verify your insights to proceed.</p>
+<a class="btnlink btn2" href="https://austincc.box.com/s/sjqpybnpmlckf19tqpve6hk75b9u6pa8" target="_blank" rel="noopener">
+Open Data Lab Spreadsheet (Excel Download) 📊
+</a>
+<p class="muted">If it opens in preview, click <strong>Download</strong> and open it in Excel.</p>
+<div class="divider"></div>
+<label for="q1">Q1: At San Gabriel Campus, which value is felt the most?</label>
+<select id="q1">
+<option value="">Select…</option>
+<option value="COURAGE">Courage</option>
+<option value="COMPASSION">Compassion</option>
+<option value="JOY">Joy</option>
+<option value="YES">Yes</option>
+</select>
+<label for="q2">Q2: Across all campuses, which value has the highest total?</label>
+<select id="q2">
+<option value="">Select…</option>
+<option value="COURAGE">Courage</option>
+<option value="COMPASSION">Compassion</option>
+<option value="JOY">Joy</option>
+<option value="YES">Yes</option>
+</select>
+<label for="q3">Q3: To increase his own JOY, which campus should R.B. visit first?</label>
+<select id="q3">
+<option value="">Select…</option>
+<option value="CYP">Cypress Creek Campus (CYP) - Cedar Park</option>
+<option value="EVC">Eastview Campus (EVC) - East Austin</option>
+<option value="EGN">Elgin Campus (EGN) - Elgin</option>
+<option value="HYS">Hays Campus (HYS) - Kyle</option>
+<option value="HLC">Highland Campus (HLC) - Central Austin</option>
+<option value="NRG">Northridge Campus (NRG) - North Austin</option>
+<option value="RGC">Rio Grande Campus (RGC) - Downtown Austin</option>
+<option value="RVS">Riverside Campus (RVS) - Southeast Austin</option>
+<option value="RRC">Round Rock Campus (RRC) - Round Rock</option>
+<option value="SGC">San Gabriel Campus (SGC) - Leander</option>
+<option value="SAC">South Austin Campus (SAC) - South Austin</option>
+</select>
+<button onclick="check3()">Verify Data Insights 🦇</button>
+<div id="m3" class="msg"></div>
+</div>
+
+<!-- PART 4 -->
+
+<div class="card locked" id="part4">
+<h2>💜🦇 Part 4 — Message Lab with Byte</h2>
+<img src="https://www.zabala.eu/wp-content/uploads/2023/11/Artificial-intelligente-and-consultancy-1200x675.jpg" alt="AI image">
+<p>Message <strong>Byte</strong> 🦇 — R.B.'s CSIT guide — and follow the prompts to determine the <strong>Message Lab number</strong>.</p>
+<div class="chatShell">
+<div class="chatHeader">
+<div class="chatHeaderLeft">
+<div>🦇 Byte (CSIT Guide)</div>
+<div class="onlineWrap">
+<span class="onlineDot"></span>
+<span class="onlineText">Online — San Gabriel Campus</span>
+</div>
+</div>
+<small>💬 Message Lab</small>
+</div>
+<div class="chatBody" id="chatBody"></div>
+<div class="chatControls" id="chatControls"></div>
+</div>
+<div class="divider"></div>
+<p><strong>Verification 💜:</strong> Enter your Message Lab number:</p>
+<input type="number" id="p4" inputmode="numeric" placeholder="Enter Message Lab number">
+<button onclick="check4()">Confirm Message Lab Number 💜</button>
+<div id="m4" class="msg"></div>
+</div>
+
+<!-- FILE ORGANIZER -->
+
+<div class="card locked" id="filesLab">
+<h2>🗂️💜 Part 5 — Organize R.B.'s Files</h2>
+<p>R.B.'s desktop is a mess. Drag each file into the correct folder.</p>
+<div class="driveHeader">
+<strong>R.B. Drive</strong>
+<div class="hint">Tip: Put student data in Data. Put presentations in Presentations.</div>
+</div>
+<div class="driveGrid">
+<div class="fileList">
+<h3>Files</h3>
+<div class="fileItem" draggable="true" id="f_roster" ondragstart="dragStart(event)" data-file="StudentData.xlsx" data-correct="Data">
+<img class="fileIcon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Microsoft_Office_Excel_%282019%E2%80%932025%29.svg/960px-Microsoft_Office_Excel_%282019%E2%80%932025%29.svg.png" alt="Excel">
+<div class="fileMeta">
+StudentData.xlsx
+<small>Contains student info</small>
+</div>
+</div>
+<div class="fileItem" draggable="true" id="f_survey" ondragstart="dragStart(event)" data-file="CSIT_Survey_Data.xlsx" data-correct="Data">
+<img class="fileIcon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Microsoft_Office_Excel_%282019%E2%80%932025%29.svg/960px-Microsoft_Office_Excel_%282019%E2%80%932025%29.svg.png" alt="Excel">
+<div class="fileMeta">
+CSIT_Survey_Data.xlsx
+<small>Dataset + totals</small>
+</div>
+</div>
+<div class="fileItem" draggable="true" id="f_budget" ondragstart="dragStart(event)" data-file="BudgetReport_FY26.xlsx" data-correct="Reports">
+<img class="fileIcon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Microsoft_Office_Excel_%282019%E2%80%932025%29.svg/960px-Microsoft_Office_Excel_%282019%E2%80%932025%29.svg.png" alt="Excel">
+<div class="fileMeta">
+BudgetReport_FY26.xlsx
+<small>Internal finance report</small>
+</div>
+</div>
+<div class="fileItem" draggable="true" id="f_report" ondragstart="dragStart(event)" data-file="Security_Audit_Report.docx" data-correct="Reports">
+<img class="fileIcon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Microsoft_Office_Word_%282019%E2%80%932025%29.svg/3840px-Microsoft_Office_Word_%282019%E2%80%932025%29.svg.png" alt="Word">
+<div class="fileMeta">
+Security_Audit_Report.docx
+<small>Write-up + findings</small>
+</div>
+</div>
+<div class="fileItem" draggable="true" id="f_slides" ondragstart="dragStart(event)" data-file="BatsToCats_Briefing.pptx" data-correct="Presentations">
+<img class="fileIcon" src="https://www.freeiconspng.com/thumbs/ppt-icon/powerpoint-icon-microsoft-powerpoint-icon-network-powerpoint-icons-and-3.png" alt="PowerPoint">
+<div class="fileMeta">
+BatsToCats_Briefing.pptx
+<small>Presentation deck</small>
+</div>
+</div>
+</div>
+<div class="folderCol">
+<h3>Folders</h3>
+<div class="folder" id="folderReports" data-folder="Reports" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFile(event)">
+<div class="folderTop">
+<img src="https://www.iconpacks.net/icons/2/free-folder-icon-1484-thumb.png" alt="Folder"> Reports
+</div>
+<p class="folderHint">Audit write-ups, internal summaries, budgets</p>
+<div class="folderFiles" id="filesReports"></div>
+</div>
+<div class="folder" id="folderData" data-folder="Data" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFile(event)">
+<div class="folderTop">
+<img src="https://www.iconpacks.net/icons/2/free-folder-icon-1484-thumb.png" alt="Folder"> Data
+</div>
+<p class="folderHint">Spreadsheets and student records</p>
+<div class="folderFiles" id="filesData"></div>
+</div>
+<div class="folder" id="folderPresentations" data-folder="Presentations" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFile(event)">
+<div class="folderTop">
+<img src="https://www.iconpacks.net/icons/2/free-folder-icon-1484-thumb.png" alt="Folder"> Presentations
+</div>
+<p class="folderHint">Slides and briefing decks</p>
+<div class="folderFiles" id="filesPresentations"></div>
+</div>
+<button onclick="checkFiles()">Verify File Organization 🗂️</button>
+<div id="mFiles" class="msg"></div>
+</div>
+</div>
+</div>
+
+<!-- FINAL LOCK -->
+
+<div class="card locked" id="finalLock">
+<h2>🦇💜 Final System Lock</h2>
+<p><strong>Use the three numbers you earned in the Bat Lab:</strong></p>
+<ul>
+<li><strong>From Part 1 (Vibe Coding):</strong> your cipher shift number</li>
+<li><strong>From Part 2 (Cyber Lab):</strong> number of phishing red flags</li>
+<li><strong>From Part 4 (Message Lab):</strong> the Message Lab number</li>
+</ul>
+<p><strong>🎯 Add all three numbers together</strong> to get the final total.</p>
+<input type="number" id="p5" inputmode="numeric" placeholder="Enter final total">
+<button onclick="check5()">Secure the Bat Lab 🦇</button>
+<div id="m5" class="msg"></div>
+</div>
+
+<!-- PASSWORD RESET -->
+
+<div class="card locked" id="pwReset">
+<h2>🔐 Final Security Step — Reset R.B.'s Password</h2>
+<p>Before you exit, create a strong passphrase that meets these requirements:</p>
+<ul>
+<li>✅ At least <strong>4</strong> tokens</li>
+<li>✅ Includes <strong>1 number</strong></li>
+<li>✅ Includes <strong>1 special character</strong> (<code>!</code>, <code>#</code>, <code>@</code>, <code>_</code>)</li>
+<li>🚫 Avoid: <code>password</code>, <code>riverbat</code>, <code>acc123</code></li>
+</ul>
+<div class="pwWrap">
+<p style="margin-top:0;"><strong>Build a passphrase:</strong> click chips to add.</p>
+<div class="pwRow" id="pwChipsWords">
+<span class="chip" onclick="addToken(this.textContent)">SanGabriel</span>
+<span class="chip" onclick="addToken(this.textContent)">Highland</span>
+<span class="chip" onclick="addToken(this.textContent)">RioGrande</span>
+<span class="chip" onclick="addToken(this.textContent)">CypressCreek</span>
+<span class="chip" onclick="addToken(this.textContent)">RoundRock</span>
+<span class="chip" onclick="addToken(this.textContent)">Riverside</span>
+<span class="chip" onclick="addToken(this.textContent)">Courage</span>
+<span class="chip" onclick="addToken(this.textContent)">Compassion</span>
+<span class="chip" onclick="addToken(this.textContent)">Joy</span>
+<span class="chip" onclick="addToken(this.textContent)">Yes</span>
+<span class="chip" onclick="addToken(this.textContent)">BatLab</span>
+<span class="chip" onclick="addToken(this.textContent)">NightShift</span>
+<span class="chip" onclick="addToken(this.textContent)">PurpleHeart</span>
+</div>
+<div class="pwRow" id="pwChipsSymbols">
+<span class="chip" onclick="addToken(this.textContent)">2026</span>
+<span class="chip" onclick="addToken(this.textContent)">25</span>
+<span class="chip" onclick="addToken(this.textContent)">11</span>
+<span class="chip" onclick="addToken(this.textContent)">10</span>
+<span class="chip" onclick="addToken(this.textContent)">!</span>
+<span class="chip" onclick="addToken(this.textContent)">#</span>
+<span class="chip" onclick="addToken(this.textContent)">@</span>
+<span class="chip" onclick="addToken(this.textContent)">_</span>
+</div>
+<div class="pwPreview" id="pwPreview">Your passphrase will appear here…</div>
+<div class="pwActions">
+<button class="btnDanger" onclick="clearPass()">Clear</button>
+<button onclick="validatePass()">Update R.B.'s Password 🔐</button>
+</div>
+<div id="pwMsg" class="msg"></div>
+</div>
+</div>
+
+<!-- SUCCESS -->
+
+<div class="card locked" id="successScreen">
+<div class="successBanner" id="successBanner">🎉 SUCCESS — Bat Lab Secured!</div>
+<img src="https://sites.austincc.edu/newsroom/wp-content/uploads/sites/81/2015/11/IMG_1988.jpg" alt="Celebration image">
+<p class="success" style="font-weight:1000;">You successfully secured the Bat Lab.</p>
+<p>
+You verified access, identified threats, confirmed data insights, organized sensitive files, and strengthened account security.
+Excellent work, Riverbat. 🦇💜
+</p>
+<div class="divider"></div>
+<p><strong>Your next clue in the race is:</strong></p>
+<p style="font-size:1.05rem; font-weight:1000; color:var(--acc-purple);">
+Go to the Cypress Creek Campus, Building 1000, for your next task! Good luck, Riverbat!
+</p>
+<img src="https://www.austincc.edu/wp-content/uploads/RS19696_20220927-CYP-Drone-Shots-ca-124.jpg" alt="Cypress Creek campus image">
+<p style="font-weight:1000; color:var(--acc-purple);">💜 Austin Community College — Start Here. Get There.</p>
+<button class="btn2" onclick="exitBatLab()">Exit Bat Lab → Next Clue 🦇</button>
+<div id="exitMsg" class="msg"></div>
+</div>
+</div>
+
+</div><!-- /wrapper -->
+
+<div class="chatNotif" id="chancellorNotif" role="dialog" aria-live="polite" aria-label="New message notification">
+<div class="chatNotifTop">
+<img src="https://offices.austincc.edu/chancellor/wp-content/uploads/sites/23/2023/09/Dr.-Russell-Lowery-Hart-scr.jpg" alt="Dr. Russell Lowery-Hart">
+<div>
+<div class="name">Dr. Russell Lowery-Hart</div>
+<div class="role">Chancellor • New message</div>
+</div>
+</div>
+<div class="chatNotifBody">
+<div class="dingText">🔔 New chat message</div>
+💜 Quick reminder, Riverbat: please be careful for phishing emails!
+</div>
+<div class="chatNotifActions">
+<button class="btn2" onclick="dismissChancellor()">Got it</button>
+</div>
+</div>
+
+<canvas id="confettiCanvas"></canvas>
+
+<script>
+var LOGIN_USER = "Bbhoggawact";
+var LOGIN_PASS = "Riverbats25";
+var MFA_CODE = "1973";
+var A1 = 3, A2 = 5, A4 = 10, FINAL = 18;
+
+function show(id, on){
+var el = document.getElementById(id);
+if(el) el.classList.toggle('locked', !on);
+}
+
+function unlock(id){
+var el = document.getElementById(id);
+if(el){
+el.classList.remove('locked');
+el.scrollIntoView({behavior:"smooth", block:"start"});
+}
+}
+
+function setMsg(id, text, ok){
+var el = document.getElementById(id);
+if(el){
+el.textContent = text;
+el.className = "msg " + (ok ? "success" : "error");
+}
+}
+
+function progress(stepIndex){
+const pct = Math.max(0, Math.min(100, (stepIndex-1) / 6 * 100));
+const fill = document.getElementById("progressFill");
+if(fill) fill.style.width = pct + "%";
+for(let i=1;i<=7;i++){
+const pill = document.getElementById("s"+i);
+if(pill){
+pill.classList.remove("active","done");
+if(i < stepIndex) pill.classList.add("done");
+if(i === stepIndex) pill.classList.add("active");
+}
+}
+}
+
+// LOGIN
+function doLogin(){
+var u = (document.getElementById("loginUser").value || "").trim();
+var p = (document.getElementById("loginPass").value || "").trim();
+if(u === LOGIN_USER && p === LOGIN_PASS){
+setMsg("loginMsg","✅ Access request accepted. Security verification required…",true);
+show("loginCard", false);
+show("mfaCard", true);
+window.scrollTo({top:0, behavior:"smooth"});
+} else {
+setMsg("loginMsg","❌ Invalid credentials. Check the sticky note and try again 🦇",false);
+}
+}
+
+// MFA
+function pickRadio(id){
+var el = document.getElementById(id);
+if(el) el.checked = true;
+}
+
+function sendMfa(){
+const radios = document.querySelectorAll("input[name='mfaMethod']");
+let method = "";
+for(const r of radios) if(r.checked) method = r.value;
+if(!method) return setMsg("mfaMsg","❌ Select a verification method first.",false);
+show("mfaSending", true);
+setMsg("mfaMsg","",true);
+setTimeout(() => {
+show("mfaSending", false);
+const fromEl = document.getElementById("mfaFrom");
+if(fromEl) fromEl.textContent = method;
+show("mfaCode", true);
+show("mfaSelect", false);
+const notif = document.getElementById("notifBox");
+if(notif){
+notif.classList.remove("slideIn");
+void notif.offsetWidth;
+notif.classList.add("slideIn");
+}
+setMsg("mfaCodeMsg","",true);
+}, 600);
+}
+
+function verifyMfa(){
+var v = (document.getElementById("mfaInput").value || "").trim();
+if(v === MFA_CODE){
+setMsg("mfaCodeMsg","✅ Verification successful. Bat Lab access restored.",true);
+show("mfaCard", false);
+show("challenge", true);
+progress(1);
+initChat();
+const p1 = document.getElementById("part1");
+if(p1) p1.scrollIntoView({behavior:"smooth", block:"start"});
+} else {
+setMsg("mfaCodeMsg","❌ Incorrect code. Check your notification and try again.",false);
+}
+}
+
+// PART 1 - GitHub Files
+function runFile01(){
+var answer = parseInt(document.getElementById('github-input-01').value, 10);
+var output = document.getElementById('github-output-01');
+if(isNaN(answer)){
+output.style.color = '#cf222e';
+output.textContent = '❌ Please enter a number';
+return;
+}
+if(answer === 21){
+output.style.color = '#1a7f37';
+output.textContent = '✅ Correct! ACC has 21 total! Unlocking File 02...';
+// Unlock File 02
+var file02 = document.getElementById('github-file-02');
+if(file02){
+file02.classList.remove('locked');
+file02.style.display = 'block';
+setTimeout(function(){
+file02.scrollIntoView({behavior:'smooth', block:'start'});
+}, 500);
+}
+} else {
+output.style.color = '#cf222e';
+output.textContent = '❌ Not quite! Try adding 11 + 10 again.';
+}
+}
+
+function runFile02(){
+var answer = parseInt(document.getElementById('github-input-02').value, 10);
+var output = document.getElementById('github-output-02');
+if(isNaN(answer)){
+output.style.color = '#cf222e';
+output.textContent = '❌ Please enter a number';
+return;
+}
+if(answer === 3){
+output.style.color = '#1a7f37';
+output.textContent = '✅ Correct! The cipher shift is 3! Unlocking File 03...';
+// Unlock File 03
+var file03 = document.getElementById('github-file-03');
+if(file03){
+file03.classList.remove('locked');
+file03.style.display = 'block';
+setTimeout(function(){
+file03.scrollIntoView({behavior:'smooth', block:'start'});
+}, 500);
+}
+} else {
+output.style.color = '#cf222e';
+output.textContent = '❌ Try again! Count the letters in CTRL and subtract 1.';
+}
+}
+
+function runFile03(){
+var shift = parseInt(document.getElementById('github-input-03').value, 10);
+var output = document.getElementById('github-output-03');
+if(isNaN(shift)){
+output.style.display = 'block';
+output.style.color = '#f85149';
+output.textContent = '❌ Please enter the shift value';
+return;
+}
+
+// Validate correct shift value
+if(shift !== 3){
+output.style.display = 'block';
+output.style.color = '#f85149';
+output.textContent = '❌ Unsuccessfully decoded. Please try again.';
+return;
+}
+
+var messages = [
+"Dw#Dxvwlq#Frppxqlw|#Froohjh/#zh#ydoxh",
+"Frxudjh1#Frpsdvvlrq1#Mr|1#dqg#\\hv1",
+"Zh#eholhyh#hyhu|#Ulyhuedw#fdq#ulvh1",
+"Vwduw#Khuh1#Jhw#Wkhuh1",
+"\\rx#duh#sduw#ri#vrphwklqj#eljjhu1",
+"L#oryh#wkh#DFF#Vdq#Jdeulho#Fdpsxv1"
+];
+var decoded = [];
+for(var i=0; i<messages.length; i++){
+var line = "";
+for(var j=0; j<messages[i].length; j++){
+line += String.fromCharCode(messages[i].charCodeAt(j) - shift);
+}
+decoded.push(line);
+}
+output.style.display = 'block';
+output.style.color = '#3fb950';
+output.textContent = 'Output:\n' + decoded.join('\n') + '\n\n✅ Successfully decoded!';
+}
+
+function check1(){
+var v = parseInt(document.getElementById("p1").value,10);
+if(isNaN(v)) return setMsg("m1","❌ Enter a number to confirm your cipher shift.",false);
+if(v === A1){
+setMsg("m1","✅ Cipher shift confirmed! Proceeding to Part 2...",true);
+unlock("part2");
+progress(2);
+} else setMsg("m1","❌ Not quite. The shift is 3 (from File 02).",false);
+}
+
+
+// PART 2 (Phishing)
+let openedEmail1Once = false;
+let chancellorShown = false;
+
+function openEmail(n){
+["mailItem1","mailItem2"].forEach(id => {
+var el = document.getElementById(id);
+if(el) el.classList.remove("selected");
+});
+const item = document.getElementById("mailItem"+n);
+if(item){
+item.classList.add("selected","read");
+}
+
+const pane = document.getElementById("mailPane");
+if(!pane) return;
+
+if(n === 1){
+pane.innerHTML = `
+<div class="mailHeader">
+<div class="title">Email #1 — Student Life 🎉 Highland End-of-Semester Bash</div>
+<button class="btn2" onclick="closeEmail()">Close</button>
+</div>
+<div class="mailMeta">
+<div><strong>From:</strong> sl@austincc.edu</div>
+<div><strong>To:</strong> you@austincc.edu</div>
+<div><strong>Subject:</strong> Student Life 🎉 Highland End-of-Semester Bash</div>
+</div>
+<div class="mailBodyText">
+Hi Riverbat!<br><br>
+We're excited to invite you to our End-of-Semester Bash happening this Friday at Highland Campus, Building 2000.<br><br>
+Come enjoy:<br>
+• Free food<br>
+• Music<br>
+• Games<br>
+• Giveaways<br><br>
+Follow us on Instagram @accstudentlife for updates! 💜<br><br>
+See you there!<br>
+— ACC Student Life Team
+</div>
+<div class="closeRow">
+<button onclick="openEmail(2)">Open Email #2</button>
+</div>
+`;
+
+if(!openedEmail1Once){
+openedEmail1Once = true;
+setTimeout(() => {
+if(!chancellorShown){
+chancellorShown = true;
+document.getElementById("chancellorNotif").classList.add("show");
+}
+}, 900);
+}
+} else if(n === 2){
+pane.innerHTML = `
+<div class="mailHeader">
+<div class="title">Email #2 — URGENT: Your ACC Gmail Password Will Expire Today</div>
+<button class="btn2" onclick="closeEmail()">Close</button>
+</div>
+<div class="mailMeta">
+<div><strong>From:</strong> acc-helpdesk@acc-securityverify.info</div>
+<div><strong>To:</strong> you@austincc.edu</div>
+<div><strong>Subject:</strong> URGENT: Your ACC Gmail Password Will Expire Today</div>
+</div>
+<div class="mailBodyText">
+Your ACC student account is scheduled for immediate deactivation.<br>
+You must verify your identity within 10 minutes to avoid losing access to all services, including Blackboard and ACCess WiFi.<br><br>
+Click the link below to confirm your account:<br>
+<strong>acc-verify-reset.info/login</strong><br><br>
+Failure to act may prevent access to <strong>Highlind</strong> Campus student systems.<br><br>
+Thank you,<br>
+ACC Technical Supp0rt Team
+</div>
+<div class="closeRow">
+<button onclick="openEmail(1)">Back to Email #1</button>
+</div>
+`;
+}
+}
+
+function closeEmail(){
+const pane = document.getElementById("mailPane");
+if(pane) pane.innerHTML = `<div class="mailEmpty">📬 Click an email on the left to read it.</div>`;
+}
+
+function dismissChancellor(){
+document.getElementById("chancellorNotif").classList.remove("show");
+}
+
+function check2(){
+var v = parseInt(document.getElementById("p2").value,10);
+if(isNaN(v)) return setMsg("m2","❌ Enter a number to verify your phishing analysis.",false);
+if(v === A2){
+setMsg("m2","✅ Threats documented. Proceed to the Data Lab 🦇💜",true);
+unlock("part3");
+progress(3);
+} else setMsg("m2","❌ Try again. Count the red flags carefully.",false);
+}
+
+// PART 3
+function check3(){
+var q1 = document.getElementById("q1").value;
+var q2 = document.getElementById("q2").value;
+var q3 = document.getElementById("q3").value;
+if(q1 === "JOY" && q2 === "JOY" && q3 === "SGC"){
+setMsg("m3","✅ Data insights verified. Proceed to the Message Lab 💜🦇",true);
+unlock("part4");
+progress(4);
+} else setMsg("m3","❌ Not quite. Re-check the spreadsheet and try again.",false);
+}
+
+// PART 4: Byte chat
+let chatStep = 0;
+const script = [
+{ bot:"Hey Riverbat 🦇<br>R.B. stepped away after someone said <em>'it works on my machine.'</em><br><br>Want to help me finish a transfer alignment check?",
+choices:[{text:"Sure 💜", go:1},{text:"Only if there's no math", go:1},{text:"Is this about cybersecurity again?", go:1}]},
+{ bot:"Before we start: CSIT at ACC isn't just one thing — it's a pathway.<br><br>Which option best describes what CSIT offers?",
+choices:[
+{text:"Certificates", stay:true, nudge:"That's part of it — but CSIT includes multiple credential types. Try again."},
+{text:"Associate degrees", stay:true, nudge:"Good thinking — but it's not the whole picture. Try again."},
+{text:"Bachelor's degrees", stay:true, nudge:"That can be true, but there's more than that. Try again."},
+{text:"All of the above", go:2}
+]},
+{ bot:"Exactly. R.B. got a message about a big partnership meeting. Want to see it?",
+choices:[{text:"Show me 🦇", go:3},{text:"Yep", go:3},{text:"Only if it's not boring", go:3}]},
+{ bot:"Here's the context:",
+bot2_img:"https://docs.gato.txst.edu/750576/w/2000/Aqx_lAUD8L5V/Summit.jpg",
+bot2:"That's Dr. Russell Lowery-Hart (ACC Chancellor) and Dr. Kelly Damphousse (Texas State University President).<br><br>They were meeting about <strong>Bats to Cats</strong> — helping ACC students transfer smoothly to Texas State.",
+choices:[{text:"Okay… what's the task?", go:4},{text:"Bats to Cats is hilarious", go:4},{text:"So we're matching degrees?", go:4}]},
+{ bot:"In CSIT, ACC offers <strong>one</strong> degree that aligns directly with the Texas State <strong>BS in Computer Science</strong> through Bats to Cats.<br><br>Which ACC degree is it?",
+choices:[
+{text:"AAS Computer Programming", stay:true, nudge:"Strong workforce degree, but not the direct transfer alignment to the BS in CS. Try again."},
+{text:"AAS Software Development", stay:true, nudge:"Great option — but this alignment is about transfer-ready CS foundations. Try again."},
+{text:"AS Computer Science", go:5},
+{text:"BAS Software Development", stay:true, nudge:"BAS is awesome — but the direct Bats to Cats CS alignment is different. Try again."}
+]},
+{ bot:"Correct. <strong>AS Computer Science</strong> aligns with the Texas State <strong>BS Computer Science</strong> pathway.<br><br>Last step: How many CSIT degrees at ACC directly align with the Texas State Bats to Cats <strong>Computer Science</strong> pathway?",
+choices:[
+{text:"3", stay:true, nudge:"You're counting programs — but we're counting direct alignments to the BS in CS. Try again."},
+{text:"5", stay:true, nudge:"Too many. Think: there's one direct match. Try again."},
+{text:"1", go:6},
+{text:"Wait… explain again", stay:true, nudge:"Bats to Cats CS alignment here is: <strong>AS Computer Science → BS Computer Science</strong>. That's the direct match."}
+]},
+{ bot:"Nice work 🦇<br><br>The system issues a standard token in <strong>tens</strong> once alignment is confirmed.<br><br><strong>Your Message Lab Number is 10.</strong>",
+choices:[{text:"Got it 💜", go:7},{text:"Writing it down", go:7}]},
+{ bot:"Enter <strong>10</strong> in the verification box below to proceed. 💜🦇", choices:[]}
+];
+
+function initChat(){
+chatStep = 0;
+const body = document.getElementById("chatBody");
+const controls = document.getElementById("chatControls");
+if(body) body.innerHTML = "";
+if(controls) controls.innerHTML = "";
+renderStep(0);
+}
+
+function addBubble(html, who){
+const body = document.getElementById("chatBody");
+if(!body) return;
+const div = document.createElement("div");
+div.className = "bubble " + (who === "user" ? "user" : "bot");
+div.innerHTML = html;
+body.appendChild(div);
+body.scrollTop = body.scrollHeight;
+}
+
+function addChatImage(url){
+const body = document.getElementById("chatBody");
+if(!body) return;
+const img = document.createElement("img");
+img.src = url;
+img.className = "imgInChat";
+img.alt = "Bats to Cats meeting photo";
+body.appendChild(img);
+body.scrollTop = body.scrollHeight;
+}
+
+function showTyping(){
+const body = document.getElementById("chatBody");
+if(!body) return;
+const t = document.createElement("div");
+t.id = "typing";
+t.className = "typing";
+t.textContent = "Byte is typing…";
+body.appendChild(t);
+body.scrollTop = body.scrollHeight;
+}
+
+function hideTyping(){
+const t = document.getElementById("typing");
+if(t) t.remove();
+}
+
+function renderChoices(choices){
+const controls = document.getElementById("chatControls");
+if(!controls) return;
+controls.innerHTML = "";
+if(!choices || choices.length === 0){
+controls.innerHTML = '<div class="muted" style="padding:2px 0">Conversation complete ✅</div>';
+return;
+}
+choices.forEach((ch, idx) => {
+const b = document.createElement("button");
+b.className = "choiceBtn";
+b.textContent = ch.text;
+b.onclick = function(){
+addBubble(ch.text, "user");
+if(ch.stay){
+showTyping();
+setTimeout(() => {
+hideTyping();
+addBubble(ch.nudge || "Try again.", "bot");
+renderChoices(script[chatStep].choices);
+}, 520);
+return;
+}
+if(typeof ch.go === "number"){
+chatStep = ch.go;
+showTyping();
+setTimeout(() => {
+hideTyping();
+renderStep(chatStep);
+}, 560);
+}
+};
+controls.appendChild(b);
+});
+}
+
+function renderStep(idx){
+const step = script[idx];
+if(!step) return;
+showTyping();
+setTimeout(() => {
+hideTyping();
+addBubble(step.bot, "bot");
+if(step.bot2_img) addChatImage(step.bot2_img);
+if(step.bot2) addBubble(step.bot2, "bot");
+renderChoices(step.choices || []);
+}, 520);
+}
+
+function check4(){
+var v = parseInt(document.getElementById("p4").value,10);
+if(isNaN(v)) return setMsg("m4","❌ Enter a number to confirm your Message Lab number.",false);
+if(v === A4){
+setMsg("m4","✅ Message Lab confirmed. Organize R.B.'s files next 🗂️💜",true);
+unlock("filesLab");
+progress(5);
+} else setMsg("m4","❌ Not quite. Complete Byte's prompts and try again.",false);
+}
+
+// FILE ORGANIZER
+const placements = {};
+
+function dragStart(e){
+e.dataTransfer.setData("text/plain", e.target.id);
+}
+
+function dragOver(e){
+e.preventDefault();
+e.currentTarget.classList.add("dropzoneActive");
+}
+
+function dragLeave(e){
+e.currentTarget.classList.remove("dropzoneActive");
+}
+
+function dropFile(e){
+e.preventDefault();
+const folderName = e.currentTarget.getAttribute("data-folder");
+const fileId = e.dataTransfer.getData("text/plain");
+const fileEl = document.getElementById(fileId);
+if(!fileEl) return;
+placements[fileId] = folderName;
+
+const reportsEl = document.getElementById("filesReports");
+const dataEl = document.getElementById("filesData");
+const presEl = document.getElementById("filesPresentations");
+if(reportsEl) reportsEl.innerHTML = "";
+if(dataEl) dataEl.innerHTML = "";
+if(presEl) presEl.innerHTML = "";
+
+for(const [fId, fld] of Object.entries(placements)){
+var el = document.getElementById(fId);
+if(!el) continue;
+const name = el.getAttribute("data-file");
+var p = document.createElement("div");
+p.className = "pillFile";
+p.textContent = name;
+if(fld === "Reports" && reportsEl) reportsEl.appendChild(p);
+if(fld === "Data" && dataEl) dataEl.appendChild(p);
+if(fld === "Presentations" && presEl) presEl.appendChild(p);
+}
+
+e.currentTarget.classList.remove("dropzoneActive");
+}
+
+function checkFiles(){
+const fileEls = document.querySelectorAll(".fileItem");
+for(const f of fileEls){
+if(!placements[f.id]) return setMsg("mFiles","❌ Drag every file into a folder before verifying.",false);
+}
+for(const f of fileEls){
+const correct = f.getAttribute("data-correct");
+if(placements[f.id] !== correct) return setMsg("mFiles","❌ Not quite. Re-check which files belong in Reports vs Data vs Presentations.",false);
+}
+setMsg("mFiles","✅ Files organized! Proceed to the Final System Lock 🦇💜",true);
+unlock("finalLock");
+progress(6);
+}
+
+// FINAL LOCK
+function check5(){
+var v = parseInt(document.getElementById("p5").value,10);
+if(isNaN(v)) return setMsg("m5","❌ Enter your final total to secure the Bat Lab.",false);
+if(v === FINAL){
+setMsg("m5","🔓 Bat Lab unlocked. Complete the final security step (password reset).",true);
+unlock("pwReset");
+progress(7);
+} else setMsg("m5","❌ Not quite. Add your Part 1 + Part 2 + Part 4 numbers.",false);
+}
+
+// PASSWORD BUILDER
+const banned = ["password","riverbat","acc123"];
+let tokens = [];
+
+function addToken(t){
+tokens.push(t);
+renderPass();
+}
+
+function clearPass(){
+tokens = [];
+renderPass();
+setMsg("pwMsg","",true);
+}
+
+function renderPass(){
+const preview = document.getElementById("pwPreview");
+if(preview) preview.textContent = tokens.length ? tokens.join("-") : "Your passphrase will appear here…";
+}
+
+function validatePass(){
+const pass = tokens.join("-").toLowerCase();
+if(tokens.length < 4) return setMsg("pwMsg","❌ Add at least 4 tokens.",false);
+if(!/[0-9]/.test(pass)) return setMsg("pwMsg","❌ Include at least one number.",false);
+if(!/[!#@_]/.test(pass)) return setMsg("pwMsg","❌ Include at least one special character (!, #, @, _).",false);
+for(const b of banned){
+if(pass.includes(b)) return setMsg("pwMsg","❌ Avoid using: " + b,false);
+}
+setMsg("pwMsg","✅ Password updated successfully. R.B.'s account is now secure. 🦇💜",true);
+setTimeout(() => {
+unlock("successScreen");
+const banner = document.getElementById("successBanner");
+if(banner){
+banner.classList.remove("bounceIn");
+void banner.offsetWidth;
+banner.classList.add("bounceIn");
+}
+launchConfetti(3200);
+}, 520);
+}
+
+function exitBatLab(){
+setMsg("exitMsg","✅ Exit confirmed. Please have a judge verify completion.", true);
+}
+
+// CONFETTI
+function launchConfetti(durationMs){
+const canvas = document.getElementById("confettiCanvas");
+if(!canvas) return;
+const ctx = canvas.getContext("2d");
+canvas.style.display = "block";
+function resize(){
+const dpr = window.devicePixelRatio || 1;
+canvas.width = Math.floor(window.innerWidth * dpr);
+canvas.height = Math.floor(window.innerHeight * dpr);
+canvas.style.width = window.innerWidth + "px";
+canvas.style.height = window.innerHeight + "px";
+ctx.setTransform(dpr,0,0,dpr,0,0);
+}
+resize();
+const colors = ["#4F2683", "#2f6fda", "#1fbf60", "#ffffff"];
+const pieces = [];
+const count = 190;
+for(let i=0;i<count;i++){
+pieces.push({
+x: Math.random() * window.innerWidth,
+y: -20 - Math.random() * window.innerHeight * 0.2,
+w: 6 + Math.random() * 7,
+h: 8 + Math.random() * 11,
+vx: -2 + Math.random() * 4,
+vy: 3 + Math.random() * 6.5,
+r: Math.random() * Math.PI,
+vr: -0.15 + Math.random() * 0.3,
+color: colors[Math.floor(Math.random() * colors.length)],
+alpha: 0.82 + Math.random() * 0.18
+});
+}
+let start = performance.now();
+function frame(now){
+const elapsed = now - start;
+ctx.clearRect(0,0,window.innerWidth, window.innerHeight);
+for(const p of pieces){
+p.x += p.vx;
+p.y += p.vy;
+p.r += p.vr;
+p.vx += (-0.02 + Math.random() * 0.04);
+if(p.x < -40) p.x = window.innerWidth + 40;
+if(p.x > window.innerWidth + 40) p.x = -40;
+ctx.save();
+ctx.globalAlpha = p.alpha;
+ctx.translate(p.x, p.y);
+ctx.rotate(p.r);
+ctx.fillStyle = p.color;
+ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+ctx.restore();
+if(p.y > window.innerHeight + 60){
+p.y = -30;
+p.x = Math.random() * window.innerWidth;
+}
+}
+if(elapsed < durationMs){
+requestAnimationFrame(frame);
+} else {
+ctx.clearRect(0,0,window.innerWidth, window.innerHeight);
+canvas.style.display = "none";
+}
+}
+requestAnimationFrame(frame);
+}
+</script>
+
+</body>
+</html>
